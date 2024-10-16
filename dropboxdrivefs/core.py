@@ -269,7 +269,7 @@ class DropboxDriveFile(AbstractBufferedFile):
             )
         else:
 
-            self.dbx.files_upload_session_append_v2(
+            self.dbx.files_upload_session_append(
                 self.buffer.getvalue(), self.cursor.session_id, self.cursor.offset
             )
 
