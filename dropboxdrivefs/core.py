@@ -78,7 +78,7 @@ class DropboxDriveFileSystem(AbstractFileSystem):
             )
         except ApiError as error:
             logging.warning(error)
-            return None
+            return []
         else:
             items = list_item.entries
             while list_item.has_more:
@@ -128,7 +128,10 @@ class DropboxDriveFileSystem(AbstractFileSystem):
 
         path = path.replace("//", "/")
         if mode == "rb":
-            url = self.dbx.files_get_temporary_link(path).link
+            try:
+                url = self.dbx.files_get_temporary_link(path).link
+            except ApiError:
+                raise FileNotFoundError(f"Error getting temporary link for {path}")
             return webhdfs.WebHDFile(
                 self,
                 url,
